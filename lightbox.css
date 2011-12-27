@@ -1,0 +1,35 @@
+/* z-index of mask must lower than #boxes .window */
+#lightbox-mask {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 9000;
+  background: #000000;
+  filter: alpha(opacity=50);
+  opacity: 0.5;
+  display: none;
+}
+   
+.lightbox {
+	position:absolute;
+	z-index: 9999;
+	background: #ffffff;
+	display: none;
+}
+
+.lightbox iframe {
+	border: 0;
+}
+
+.lightbox .close {
+	display: block;
+	position: absolute; 
+	right: -6px; 
+	top: -6px;
+	width: 16px;
+	height: 16px;
+	font-size: 0px;
+	text-indent: -99999px;
+	background-image: url(close.png);
+	
+}
