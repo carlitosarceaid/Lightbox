@@ -2,7 +2,7 @@
 
 Title:		bcLightbox: a jQuery Lightbox Plugin
 Author:		Derek Beauchemin
-Version:	0.0.2
+Version:	0.0.3.5
 Website:	http://derekbeau.com
 License: 	Dual licensed under the MIT and GPL licenses.
 
@@ -104,10 +104,10 @@ iframe:			creates an iframe within the lightbox and loads the url [string]
 				
 				// set the popup position
 				if (element.height() > $(window).height()) element.css('top', 0);
-				else element.css('top', ($(window).height()/2-element.height()/2));
+				else element.css('top', ($(window).height()/2-element.height()/2)+$(window).scrollTop());
 				
 				if (element.width() > $(window).width()) element.css('left', 0);
-				else element.css('left', $(window).width()/2-element.width()/2);
+				else element.css('left', ($(window).width()/2-element.width()/2)+$(window).scrollLeft());
 				
 				// resize the ligthbox
 				if (config.fitWindow == true) resizeElements();
@@ -124,7 +124,7 @@ iframe:			creates an iframe within the lightbox and loads the url [string]
 
 				// set the popup window to center
 				element.css('top', ($(window).height()/2-element.height()/2)+$(window).scrollTop());
-				element.css('left', $(window).width()/2-element.width()/2);
+				element.css('left', ($(window).width()/2-element.width()/2)+$(window).scrollLeft());
 			}
 		});
 		return this;

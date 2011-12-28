@@ -1,3 +1,6 @@
+0.0.3.5
+* Bug fixes with resizing.
+
 0.0.3
 * Resizing is now optional.
 
