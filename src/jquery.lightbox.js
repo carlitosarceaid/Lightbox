@@ -14,7 +14,7 @@ fadeIn:			the duration of the fade in animation [integer, milliseconds, defaults
 maskClose:		close the lightbox when the mask is clicked [boolean, defaults to true]
 timesShown:		how many times a visitor should be shown the lightbox [integer]
 cookieExpires:	how many days the cookie should last [integer]
-resize:			resize the lightbox to fit the window [boolean, defaults to false]
+fitWindow:		resize the lightbox to fit the window [boolean, defaults to false]
 url:			loads lightbox content directly from a url [string]
 iframe:			creates an iframe within the lightbox and loads the url [string]
 
@@ -30,7 +30,7 @@ iframe:			creates an iframe within the lightbox and loads the url [string]
 			maskClose: true,
 			timesShown: 0,
 			cookieExpires: 0,
-			resize: false,
+			fitWindow: false,
 			url: undefined,
 			iframe: undefined
 		};
@@ -110,7 +110,7 @@ iframe:			creates an iframe within the lightbox and loads the url [string]
 				else element.css('left', $(window).width()/2-element.width()/2);
 				
 				// resize the ligthbox
-				if (config.resize == true) resizeElements();
+				if (config.fitWindow == true) resizeElements();
 			}
 			
 			function resizeElements() {

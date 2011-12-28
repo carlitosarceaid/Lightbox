@@ -1,16 +1,6 @@
-DerekBeau Lightbox (v0.0.1)
+DerekBeau Lightbox (v0.0.3)
 ================================
 
-Description here
-
-
-Usage
---------
-* bullet
-* bullet
-
-	code indented
-
-Conclusion
------------
-Testing
+Todo
+----------
+* Resize with dynamic content (not possible with iFrame)
