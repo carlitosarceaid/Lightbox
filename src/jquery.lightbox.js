@@ -14,6 +14,7 @@ fadeIn:			the duration of the fade in animation [integer, milliseconds, defaults
 maskClose:		close the lightbox when the mask is clicked [boolean, defaults to true]
 timesShown:		how many times a visitor should be shown the lightbox [integer]
 cookieExpires:	how many days the cookie should last [integer]
+resize:			resize the lightbox to fit the window [boolean, defaults to false]
 url:			loads lightbox content directly from a url [string]
 iframe:			creates an iframe within the lightbox and loads the url [string]
 
@@ -29,6 +30,7 @@ iframe:			creates an iframe within the lightbox and loads the url [string]
 			maskClose: true,
 			timesShown: 0,
 			cookieExpires: 0,
+			resize: false,
 			url: undefined,
 			iframe: undefined
 		};
@@ -51,7 +53,7 @@ iframe:			creates an iframe within the lightbox and loads the url [string]
 			// load the content
 			if (config.url != undefined) { $('.content', element).load(config.url); }
 			else if (config.iframe != undefined) { 
-				var iframe = '<iframe width="100%" height="100%" src='+config.iframe+' />';
+				var iframe = '<iframe style="width: 100%; height: 100%;" src='+config.iframe+' />';
 				$('.content', element).html(iframe);
 			}
 			
@@ -67,7 +69,7 @@ iframe:			creates an iframe within the lightbox and loads the url [string]
 			function showModal() {
 				if (checkCookie(config)) {
 					window.setTimeout(function() {
-						resizeElements();
+						moveElements();
 
 						// transition effects   
 						mask.fadeIn(config.fadeIn/2);
@@ -87,37 +89,42 @@ iframe:			creates an iframe within the lightbox and loads the url [string]
 						
 						// move things around when the window resizes
 						$(window).resize(function() {
-							resizeElements();
+							moveElements();
 						});
 						$(window).scroll(function() {
-							resizeElements();
+							moveElements();
 						});
 					}, config.delay);
 				}
 			}
 			
+			function moveElements() {
+				// set the mask to full screen
+				mask.css({'width':$(document).width(),'height':$(document).height()});
+				
+				// set the popup position
+				if (element.height() > $(window).height()) element.css('top', 0);
+				else element.css('top', ($(window).height()/2-element.height()/2));
+				
+				if (element.width() > $(window).width()) element.css('left', 0);
+				else element.css('left', $(window).width()/2-element.width()/2);
+				
+				// resize the ligthbox
+				if (config.resize == true) resizeElements();
+			}
+			
 			function resizeElements() {
-				// get the screen size
-				var scrollTop = $(document).scrollTop();
-				var docHeight = $(document).height();
-				var docWidth = $(document).width();
-				var winHeight = $(window).height();
-				var winWidth = $(window).width();
-
 				// reset element size
 				element.height(elementHeight);
 				element.width(elementWidth);
 
-				// set the mask to full screen
-				mask.css({'width':docWidth,'height':docHeight});
-
 				// set the popup window max size
-				if (element.height() > winHeight) element.height(winHeight);
-				if (element.width() > winWidth) element.width(winWidth);
+				if (element.height() > $(window).height()) element.height($(window).height());
+				if (element.width() > $(window).width()) element.width($(window).width());
 
 				// set the popup window to center
-				element.css('top', (winHeight/2-element.height()/2)+scrollTop);
-				element.css('left', winWidth/2-element.width()/2);
+				element.css('top', ($(window).height()/2-element.height()/2)+$(window).scrollTop());
+				element.css('left', $(window).width()/2-element.width()/2);
 			}
 		});
 		return this;
