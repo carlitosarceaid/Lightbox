@@ -2,7 +2,7 @@
 
 Title:		bcLightbox: a jQuery Lightbox Plugin
 Author:		Derek Beauchemin
-Version:	0.0.1
+Version:	0.0.2
 Website:	http://derekbeau.com
 License: 	Dual licensed under the MIT and GPL licenses.
 
@@ -10,7 +10,7 @@ bcLightbox Options
 
 autoLoad:		automatically load the light box when called [boolean, defaults to false]
 delay:			how long to wait before showing the lightbox [integer, milliseconds, defautls to 0]
-fadeIn:			the duration of the fade in animation [integer, milliseconds, defaults to 2000]
+fadeIn:			the duration of the fade in animation [integer, milliseconds, defaults to 1000]
 maskClose:		close the lightbox when the mask is clicked [boolean, defaults to true]
 timesShown:		how many times a visitor should be shown the lightbox [integer]
 cookieExpires:	how many days the cookie should last [integer]
@@ -25,14 +25,12 @@ iframe:			creates an iframe within the lightbox and loads the url [string]
 		var config = {
 			autoLoad: false,
 			delay: 0,
-			fadeIn: 2000,
+			fadeIn: 1000,
 			maskClose: true,
-			timesShown: 3,
-			cookieExpires: 7,
+			timesShown: 0,
+			cookieExpires: 0,
 			url: undefined,
-			iframe: undefined,
-			winHeight: $(window).height(),
-			winWidth: $(window).width()
+			iframe: undefined
 		};
 		
 		// merge default global variables with custom variables, modifying 'config'
@@ -46,6 +44,8 @@ iframe:			creates an iframe within the lightbox and loads the url [string]
 
 			// save the element variable
 			var element = $(this);
+			var elementHeight = element.height();
+			var elementWidth = element.width();
 			element.addClass('lightbox');
 			
 			// load the content
@@ -55,25 +55,19 @@ iframe:			creates an iframe within the lightbox and loads the url [string]
 				$('.content', element).html(iframe);
 			}
 			
-			// autoload the box or attach a click listener
+			// autoload the box and attach a click listener
 			if (config.autoLoad == true) { showModal(); }
-			else {
-				$('a[href=#'+element.attr('id')+']').click(function(e) {
-					e.preventDefault();
-					showModal();
-				});
-			}
+
+			$('a[href=#'+element.attr('id')+']').click(function(e) {
+				e.preventDefault();
+				showModal();
+			});
 			
 			// show the box
 			function showModal() {
 				if (checkCookie(config)) {
 					window.setTimeout(function() {
-						// set the mask to full screen
-						mask.css({'width':config.winWidth,'height':config.winHeight});
-
-						// Set the popup window to center
-						element.css('top',  config.winHeight/2-element.height()/2);
-						element.css('left', config.winWidth/2-element.width()/2);
+						resizeElements();
 
 						// transition effects   
 						mask.fadeIn(config.fadeIn/2);
@@ -90,8 +84,40 @@ iframe:			creates an iframe within the lightbox and loads the url [string]
 								mask.hide(); element.hide();
 							})
 						}
+						
+						// move things around when the window resizes
+						$(window).resize(function() {
+							resizeElements();
+						});
+						$(window).scroll(function() {
+							resizeElements();
+						});
 					}, config.delay);
 				}
+			}
+			
+			function resizeElements() {
+				// get the screen size
+				var scrollTop = $(document).scrollTop();
+				var docHeight = $(document).height();
+				var docWidth = $(document).width();
+				var winHeight = $(window).height();
+				var winWidth = $(window).width();
+
+				// reset element size
+				element.height(elementHeight);
+				element.width(elementWidth);
+
+				// set the mask to full screen
+				mask.css({'width':docWidth,'height':docHeight});
+
+				// set the popup window max size
+				if (element.height() > winHeight) element.height(winHeight);
+				if (element.width() > winWidth) element.width(winWidth);
+
+				// set the popup window to center
+				element.css('top', (winHeight/2-element.height()/2)+scrollTop);
+				element.css('left', winWidth/2-element.width()/2);
 			}
 		});
 		return this;
@@ -130,7 +156,7 @@ function checkCookie(config) {
 	timesShown = parseInt(timesShown);
 	
 	// check if we should show the box
-	if (timesShown >= config.timesShown) {
+	if (timesShown >= config.timesShown && config.timesShown > 0) {
 		return false;
 	}
 	else {
