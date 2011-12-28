@@ -53,7 +53,7 @@ iframe:			creates an iframe within the lightbox and loads the url [string]
 			// load the content
 			if (config.url != undefined) { $('.content', element).load(config.url); }
 			else if (config.iframe != undefined) { 
-				var iframe = '<iframe style="width: 100%; height: 100%;" src='+config.iframe+' />';
+				var iframe = '<iframe marginheight="0" marginwidth="0" frameborder="0" style="width: 100%; height: 100%;" src='+config.iframe+' />';
 				$('.content', element).html(iframe);
 			}
 			
@@ -72,6 +72,7 @@ iframe:			creates an iframe within the lightbox and loads the url [string]
 						moveElements();
 
 						// transition effects   
+						mask.css('filter', mask.css('filter')); // IE fix
 						mask.fadeIn(config.fadeIn/2);
 						element.fadeIn(config.fadeIn); 
 
