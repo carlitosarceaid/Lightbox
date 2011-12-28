@@ -1,3 +1,6 @@
+0.0.4
+* Support for mobile browsers (constant, fixed position)
+
 0.0.3.5
 * Bug fixes with resizing.
 * IE fix for fadeIn to transparent.

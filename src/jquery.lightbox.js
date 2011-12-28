@@ -2,7 +2,7 @@
 
 Title:		bcLightbox: a jQuery Lightbox Plugin
 Author:		Derek Beauchemin
-Version:	0.0.3.5
+Version:	0.0.4
 Website:	http://derekbeau.com
 License: 	Dual licensed under the MIT and GPL licenses.
 
@@ -14,7 +14,7 @@ fadeIn:			the duration of the fade in animation [integer, milliseconds, defaults
 maskClose:		close the lightbox when the mask is clicked [boolean, defaults to true]
 timesShown:		how many times a visitor should be shown the lightbox [integer]
 cookieExpires:	how many days the cookie should last [integer]
-fitWindow:		resize the lightbox to fit the window [boolean, defaults to false]
+displayMode:	how the lightbox should render [string (default, fluid, mobile)]
 url:			loads lightbox content directly from a url [string]
 iframe:			creates an iframe within the lightbox and loads the url [string]
 
@@ -30,7 +30,7 @@ iframe:			creates an iframe within the lightbox and loads the url [string]
 			maskClose: true,
 			timesShown: 0,
 			cookieExpires: 0,
-			fitWindow: false,
+			displayMode: 'default',
 			url: undefined,
 			iframe: undefined
 		};
@@ -69,7 +69,14 @@ iframe:			creates an iframe within the lightbox and loads the url [string]
 			function showModal() {
 				if (checkCookie(config)) {
 					window.setTimeout(function() {
+						// move things around when the window resizes
 						moveElements();
+						$(window).resize(function() {
+							moveElements();
+						});
+						$(window).scroll(function() {
+							moveElements();
+						});
 
 						// transition effects   
 						mask.css('filter', mask.css('filter')); // IE fix
@@ -87,14 +94,6 @@ iframe:			creates an iframe within the lightbox and loads the url [string]
 								mask.hide(); element.hide();
 							})
 						}
-						
-						// move things around when the window resizes
-						$(window).resize(function() {
-							moveElements();
-						});
-						$(window).scroll(function() {
-							moveElements();
-						});
 					}, config.delay);
 				}
 			}
@@ -103,15 +102,21 @@ iframe:			creates an iframe within the lightbox and loads the url [string]
 				// set the mask to full screen
 				mask.css({'width':$(document).width(),'height':$(document).height()});
 				
-				// set the popup position
-				if (element.height() > $(window).height()) element.css('top', 0);
-				else element.css('top', ($(window).height()/2-element.height()/2)+$(window).scrollTop());
-				
-				if (element.width() > $(window).width()) element.css('left', 0);
-				else element.css('left', ($(window).width()/2-element.width()/2)+$(window).scrollLeft());
-				
-				// resize the ligthbox
-				if (config.fitWindow == true) resizeElements();
+				if (config.displayMode == 'mobile') {
+					element.css('top', 5);
+					element.css('left', 5);
+				}
+				else {
+					// set the popup position
+					if (element.height() > $(window).height()) element.css('top', 0);
+					else element.css('top', ($(window).height()/2-element.height()/2)+$(window).scrollTop());
+
+					if (element.width() > $(window).width()) element.css('left', 0);
+					else element.css('left', ($(window).width()/2-element.width()/2)+$(window).scrollLeft());
+
+					// resize the ligthbox
+					if (config.displayMode == 'fluid') resizeElements();
+				}
 			}
 			
 			function resizeElements() {
